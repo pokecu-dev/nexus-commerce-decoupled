@@ -5,8 +5,8 @@ Repositori resmi untuk pengembangan sistem **Nexus Commerce** menggunakan arsite
 ---
 
 ## 🚀 Anggota Tim Kelompok
-* **Backend Developer / QA Bug Hunter:** [Nama Kamu] 🎯
-* **Contributor / UI Frontend Team:** [Nama-nama Teman Kelompokmu] 👥
+* **Backend Developer / QA Bug Hunter:** pokecu-dev 🎯
+* **Contributor / UI Frontend Team:** none 👥
 
 ---
 
