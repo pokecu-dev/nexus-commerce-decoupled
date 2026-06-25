@@ -1,0 +1,8 @@
+# mengabaikan folder settingan vscode dari fe/front end
+front-end/.vscode/
+.vscode/
+
+# mengabaikan file log / cache bawaan system os windows
+Thumbs.db
+.DS_Store
+*.log

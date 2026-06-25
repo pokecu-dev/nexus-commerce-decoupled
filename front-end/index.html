@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tes fullstack:D</title>
+
+    <style>
+      body {
+        background-color: #f4f4f4;
+        /* background-color: white; */
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 5vh;
+        background-color: cornflowerblue;
+        color: white;
+        padding: 3vh;
+      }
+
+      .content-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 5vh;
+        gap: 5vh;
+        flex-wrap: wrap;
+      }
+      .card {
+        flex: 1;
+        min-width: 200px;
+        background-color: white;
+        padding: 5vh;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .harga {
+        color: crimson;
+        font-weight: bold;
+      }
+      @media screen and (max-width: 576px) {
+        body {
+          background-color: grey;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="logo">toko keren fullstack:D</div>
+      <div class="status">
+        Status API:
+        <span id="status-api">Connecting............(wait sabar)</span>
+      </div>
+    </div>
+
+    <div class="content-container" id="produk-list"></div>
+  </body>
+
+  <script>
+    console.log('tuwes');
+    async function ambilDataProduk() {
+      console.log('twaldkjfsalk');
+      const container = document.getElementById('produk-list');
+      const status = document.getElementById('status-api');
+
+      try {
+        console.log('woi');
+        const respon = await fetch('http://localhost/api/produk');
+        const output = await respon.json();
+        console.log('hai');
+        if (output.status === 'success') {
+          status.innerText = 'connected:D';
+          status.style.color = 'lightgreen';
+          let listhtml = '';
+
+          output.data.forEach((produk) => {
+            listhtml += `
+                            <div class="card">
+                                <h3>${produk.nama}</h3>
+                                <p class="harga">Rp ${produk.harga.toLocaleString(
+                                  'id-ID'
+                                )}</p>
+                                <p>ID Barang: ${produk.id}</p>
+                            </div>
+                        `;
+          });
+
+          container.innerHTML = listhtml;
+        } else {
+          status.innerText = 'gagal:(';
+        }
+      } catch (e) {
+        status.innerText = 'error:(';
+      }
+    }
+
+    ambilDataProduk();
+  </script>
+</html>
