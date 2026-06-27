@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+// import controller:D
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\LoginController;  
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
@@ -22,3 +25,6 @@ Route::get('/produk', function (){
 });
 
 Route::get('/users',[UserController::class, 'index']);
+
+Route::post('/login',[LoginController::class, 'login']);
+Route::post('/register',[LoginController::class,'register']);
