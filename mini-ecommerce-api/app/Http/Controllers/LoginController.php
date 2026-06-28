@@ -22,11 +22,25 @@ class LoginController extends Controller
 
             $token = 'TOKEN_SIGMA_' . bin2hex(random_bytes(16));
 
+            DB::table('users')
+                ->where("ID",$users->ID)
+                ->update([
+                    'TOKEN' => $token,
+                    'UPDATED_AT' => now()
+                ]);
+
+            $role = match ($users->ROLE) {
+                "ADMIN" => 96 ,
+                "PENJUAL" => 59,
+                "PEMBELI" => 3,
+                default => 3,
+            };
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'login berhasil',
                 'token' => $token,
-                'role' => $users->ROLE
+                'role' => $role
             ]);
         }
         else{

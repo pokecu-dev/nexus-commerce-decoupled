@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('FOTO_USERS', 100)->default('default.jpg');
             $table->enum('STATUS', ['1', '0', 'delete'])->default('1');
             $table->timestamps();
+            $table->string('TOKEN')->nullable();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

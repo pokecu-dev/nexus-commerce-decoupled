@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>tes fullstack:D</title>
-
+    <title>Document</title>
+    <script src="./assets/js/basicCheck.js"></script>
     <style>
       body {
         background-color: #f4f4f4;
@@ -12,94 +12,65 @@
         font-family: Arial, sans-serif;
         margin: 0;
       }
-
-      .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 5vh;
-        background-color: cornflowerblue;
-        color: white;
-        padding: 3vh;
-      }
-
-      .content-container {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        padding: 5vh;
-        gap: 5vh;
-        flex-wrap: wrap;
-      }
-      .card {
-        flex: 1;
-        min-width: 200px;
-        background-color: white;
-        padding: 5vh;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      .harga {
-        color: crimson;
-        font-weight: bold;
-      }
-      @media screen and (max-width: 576px) {
-        body {
-          background-color: grey;
-        }
-      }
     </style>
   </head>
   <body>
-    <div class="navbar">
-      <div class="logo">toko keren fullstack:D</div>
-      <div class="status">
-        Status API:
-        <span id="status-api">Connecting............(wait sabar)</span>
-      </div>
-    </div>
+    <form id="form-data">
+      <br>
+      <label>username atau email</label>
+      <input type="text" id="username" name="username" required>
+      <br>
+      <br>
+      <label>password</label>
+      <input type="password" id="password" name="password" required>
+      <input type="submit">
+    </form>
+    <div id="notif"></div>
 
-    <div class="content-container" id="produk-list"></div>
-  </body>
+    <script>
+      document.getElementById('form-data').onsubmit = async (event) => {
 
-  <script>
-    console.log('tuwes');
-    async function ambilDataProduk() {
-      console.log('twaldkjfsalk');
-      const container = document.getElementById('produk-list');
-      const status = document.getElementById('status-api');
+            event.preventDefault();
+            const notif = document.getElementById("notif");
+            const form_data = new FormData(event.target);
+            
+            const dataJson = Object.fromEntries(form_data.entries());
 
-      try {
-        console.log('woi');
-        const respon = await fetch('http://localhost/api/produk');
-        const output = await respon.json();
-        console.log('hai');
-        if (output.status === 'success') {
-          status.innerText = 'connected:D';
-          status.style.color = 'lightgreen';
-          let listhtml = '';
+            try {
 
-          output.data.forEach((produk) => {
-            listhtml += `
-                            <div class="card">
-                                <h3>${produk.nama}</h3>
-                                <p class="harga">Rp ${produk.harga.toLocaleString(
-                                  'id-ID'
-                                )}</p>
-                                <p>ID Barang: ${produk.id}</p>
-                            </div>
-                        `;
-          });
+                const respon = await fetch('http://localhost/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(dataJson)
+                });
 
-          container.innerHTML = listhtml;
-        } else {
-          status.innerText = 'gagal:(';
+                const data = await respon.json();
+                if (data.status === 'success') {
+                  alert('berhasil:'+ data.token);
+                    localStorage.setItem('smlvl',data.role)
+                    localStorage.setItem('token_sigma',data.token)
+
+                    window.location.reload();
+                    // if (data.role === 'PENJUAL') {
+                    //     window.location.href = 'penjual/penjual.php';
+                    // } else if (data.role === 'PEMBELI') {
+                    //     window.location.href = 'pembeli/pembeli.php'
+                    // } else if (data.role === "ADMIN") {
+                    //     window.location.href = 'atmin/admin.php'
+                    // } else {
+                    //     notif.innerText = "role tidak dikenali!";
+                    // }
+                } else {
+
+                    notif.innerText = data.message;
+                }
+
+
+            } catch (error) {
+                notif.innerText = "error" + error.message;
+            }
+
         }
-      } catch (e) {
-        status.innerText = 'error:(';
-      }
-    }
-
-    ambilDataProduk();
-  </script>
+    </script>
+  </body>
 </html>
