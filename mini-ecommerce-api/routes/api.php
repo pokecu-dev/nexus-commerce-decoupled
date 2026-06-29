@@ -32,6 +32,53 @@ Route::get('/users',[UserController::class, 'index']);
 Route::post('/login',[LoginController::class, 'login']);
 Route::post('/register',[LoginController::class,'register']);
 
+// logout di be adalah hapus token
+Route::post('/logout', function(Request $request){
+    $tokenInput = $request->bearerToken('token');
+    
+    if(!$tokenInput){
+        return response()->json([
+            'status' => 'error',
+            'message' => 'input token kosong'
+        ],401);
+    }
+
+    try{
+
+        $users = \App\Models\User::where('TOKEN',$tokenInput)->first();
+        if (!$users) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Sesi tidak valid atau token sudah kedaluwarsa!'
+            ], 404);
+        }
+        $users->TOKEN = null;
+        $users->save();
+        // DB::table('users')->where('TOKEN',$tokenInput)->update([
+        //     "token" => null
+        // ]);
+
+        // $userDEBUG = \App\Models\User::where('USERNA',$tokenInput)->first();
+
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'berhasil logout dan menghapus token',
+            'token' => $tokenInput,
+            'user' => $users->USERNAME,
+            'db_token' => $users->TOKEN
+            
+        ]);
+    }
+    catch(Exception $e){
+        return response()->json([
+            'status'=> 'error',
+            'message' => 'error: '. $e->getMessage()
+        ]);
+    }
+
+});
+
 Route::post('/verify-token', function (Request $request){
     $tokenInput = $request->input('token');
     $roleInput = $request->input('r');
@@ -85,28 +132,17 @@ Route::post('/verify-token', function (Request $request){
 
 });
 
-// logout di be adalah hapus token
-Route::post('/logout', function(Request $request){
-    $tokenInput = $request->input('token');
-    
-    try{
-        DB::table('users')->where('TOKEN',$tokenInput)->update([
-            "token" => null
-        ]);
+// admin
+Route::middleware(['role.sigma:ADMIN'])->group(function(){
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'berhasil logout dan menghapus token'
-        ]);
-    }
-    catch(Exception $e){
-        return response()->json([
-            'status'=> 'error',
-            'message' => 'error: '. $e->getMessage()
-        ]);
-    }
+});
 
-    
+// penjual
+Route::middleware(['role.sigma:PENJUAL'])->group(function(){
 
+});
+
+// pembeli
+Route::middleware(['role.sigma:PEMBELI'])->group(function(){
 
 });
