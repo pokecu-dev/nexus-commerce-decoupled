@@ -51,7 +51,7 @@ Route::post('/verify-token', function (Request $request){
         3 => "PEMBELI",
         "96" => "ADMIN",
         "59" => "PENJUAL",
-        "3 "=> "PEMBELI"
+        "3"=> "PEMBELI"
     };
 
     // db
@@ -90,7 +90,9 @@ Route::post('/logout', function(Request $request){
     $tokenInput = $request->input('token');
     
     try{
-        DB::table('users')->where('TOKEN',$tokenInput)->first();
+        DB::table('users')->where('TOKEN',$tokenInput)->update([
+            "token" => null
+        ]);
 
         return response()->json([
             'status' => 'success',

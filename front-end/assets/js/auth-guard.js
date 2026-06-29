@@ -1,13 +1,13 @@
-// const { json } = require("node:stream/consumers");
-
 (async () => {
   const token = localStorage.getItem('token_sigma');
   const r = localStorage.getItem('smlvl');
 
   const current = window.location.pathname.split('/');
 
+  let PathToLogin = './index.html';
+
   let currentpages = window.location.pathname.split('/').pop();
-  let currentdir = false;
+  let currentdir = false; // hanya berfungsi jika ada dasboards pada dir atau url
 
   console.log(current);
 
@@ -15,17 +15,20 @@
     const indexDashboard = current.indexOf('dashboards');
     currentdir = current[indexDashboard + 1];
   }
-
-  if (!token || !r) {
-    if (currentpages !== 'index.html')
-      window.location.href = './../../index.html';
-    return;
+  if (current.includes('front-end')) {
+    const feIndex = current.indexOf('front-end');
+    if (feIndex !== -1) {
+      const stepBack = current.length - feIndex - 2;
+      PathToLogin = '../'.repeat(stepBack);
+    }
   }
 
-  //   str = "HAI";
-  // //   console.log(str.uppercase())
-  //   if(str == 'hai') console.log("hai");
-  //   else console.log('em')
+  if (!token || !r) {
+    if (currentdir || current.includes('dashboards')) {
+      window.location.href = PathToLogin;
+    }
+    return;
+  }
 
   try {
     const responses = await fetch('http://localhost/api/verify-token', {
@@ -37,15 +40,22 @@
     const data = await responses.json();
 
     if (data.status === 'success') {
-      if (currentdir.toUpperCase() === data.data) {
-        console.log('success');
-        return;
-      } else if(currentdir.toUpperCase() !== data.data && currentdir) {
-        let path = "./../" + data.data.toLowerCase();
-        window.location.href = path;
+      if (currentdir) {
+        if (currentdir.toUpperCase() === data.data) {
+          // console.log('success');
+          return;
+        } else if (currentdir.toUpperCase() !== data.data) {
+          let path = './../' + data.data.toLowerCase();
+          window.location.href = path;
+        }
+      }
+      // jika user habis login
+      else {
+        window.location.href = './dashboards/' + data.data.toLowerCase();
       }
     } else {
-      console.log(data);
+      localStorage.clear();
+      window.location.reload();
     }
   } catch (e) {
     console.log(e);

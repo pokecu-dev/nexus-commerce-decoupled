@@ -11,6 +11,7 @@ use PHPUnit\Logging\OpenTestReporting\Status;
 
 class LoginController extends Controller
 {
+
     public function login(Request $request){
         $username = $request->input('username');
         $password = $request->input('password');
@@ -18,16 +19,7 @@ class LoginController extends Controller
 
         $users = DB::table('users')->where('USERNAME',$username)->orWhere('EMAIL',$username)->first();
         
-        if($users && Hash::check($password,$users->PASS)){
-
-            $token = 'TOKEN_SIGMA_' . bin2hex(random_bytes(16));
-
-            DB::table('users')
-                ->where("ID",$users->ID)
-                ->update([
-                    'TOKEN' => $token,
-                    'UPDATED_AT' => now()
-                ]);
+        if($users && Hash::check($password,$users->PASS)){   
 
             $role = match ($users->ROLE) {
                 "ADMIN" => 96 ,
@@ -36,10 +28,30 @@ class LoginController extends Controller
                 default => 3,
             };
 
+            if(!$users->TOKEN){
+                
+                $token = 'TOKEN_SIGMA_' . bin2hex(random_bytes(16));
+
+                DB::table('users')
+                ->where("ID",$users->ID)
+                ->update([
+                    'TOKEN' => $token,
+                    'UPDATED_AT' => now()
+                ]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'login berhasil',
+                    'token' => $token,
+                    'role' => $role
+                ]);
+
+            }
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'login berhasil',
-                'token' => $token,
+                'token' => $users->TOKEN,
                 'role' => $role
             ]);
         }

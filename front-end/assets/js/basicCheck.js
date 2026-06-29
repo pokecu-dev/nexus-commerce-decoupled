@@ -7,4 +7,5 @@
     else if (l == 59) window.location.href = './dashboards/penjual/index.html';
     else if (l == 3) window.location.href = './dashboards/pembeli/index.html';
   }
+  
 })();

@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <script src="./assets/js/basicCheck.js"></script>
+    <script src="./assets/js/auth-guard.js"></script>
+    <!-- <script src="./assets/js/basicCheck.js"></script> -->
     <style>
       body {
         background-color: #f4f4f4;
@@ -51,15 +52,6 @@
                     localStorage.setItem('token_sigma',data.token)
 
                     window.location.reload();
-                    // if (data.role === 'PENJUAL') {
-                    //     window.location.href = 'penjual/penjual.php';
-                    // } else if (data.role === 'PEMBELI') {
-                    //     window.location.href = 'pembeli/pembeli.php'
-                    // } else if (data.role === "ADMIN") {
-                    //     window.location.href = 'atmin/admin.php'
-                    // } else {
-                    //     notif.innerText = "role tidak dikenali!";
-                    // }
                 } else {
 
                     notif.innerText = data.message;
