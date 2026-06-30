@@ -20,8 +20,9 @@ async function logoutFromAllDevices() {
     const data = await responses.json();
 
     if (data.status === 'success') {
-        alert(data.token)
-        console.log(data)
+        alert('logout berhasil:D')
+        window.location.reload()
+        // console.log(data)
         // logout();
     } else {
       alert('Gagal logout dari server: ' + data);

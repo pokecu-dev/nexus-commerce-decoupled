@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./../../assets/js/auth-guard.js"></script>
+</head>
+<body>
+    <h1>profile</h1>
+    <div class="info">
+
+    </div>
+<script>
+    async function profile() {
+        const token = localStorage.getItem('token_sigma');
+        const info = document.getElementById('info');
+        console.log('hai')
+
+        try{
+            const responses = await fetch('http://localhost/api/profile',{
+                method: 'GET',
+                headers: { Authorization: `Bearer ${token}`, 
+                Accept: 'application/json'}
+            });
+
+            const data = await responses.json();
+
+            console.log(data)
+
+        }
+        catch(e){
+
+        }
+    }
+    profile()
+</script>
+</body>
+</html>

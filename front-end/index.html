@@ -17,52 +17,52 @@
   </head>
   <body>
     <form id="form-data">
-      <br>
+      <br />
       <label>username atau email</label>
-      <input type="text" id="username" name="username" required>
-      <br>
-      <br>
+      <input type="text" id="username" name="username" required />
+      <br />
+      <br />
       <label>password</label>
-      <input type="password" id="password" name="password" required>
-      <input type="submit">
+      <input type="password" id="password" name="password" required />
+      <input type="submit" id="submit-btn" value="login"/>
     </form>
     <div id="notif"></div>
 
     <script>
       document.getElementById('form-data').onsubmit = async (event) => {
+        event.preventDefault();
 
-            event.preventDefault();
-            const notif = document.getElementById("notif");
-            const form_data = new FormData(event.target);
-            
-            const dataJson = Object.fromEntries(form_data.entries());
+        const submitBtn = document.getElementById('submit-btn');
+        const notif = document.getElementById('notif');
+        submitBtn.disabled = true;
+        notif.innerText = 'Memproses...';
+        
+        const form_data = new FormData(event.target);
 
-            try {
+        const dataJson = Object.fromEntries(form_data.entries());
 
-                const respon = await fetch('http://localhost/api/login', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(dataJson)
-                });
+        try {
+          const respon = await fetch('http://localhost/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dataJson),
+          });
 
-                const data = await respon.json();
-                if (data.status === 'success') {
-                  alert('berhasil:'+ data.token);
-                    localStorage.setItem('smlvl',data.role)
-                    localStorage.setItem('token_sigma',data.token)
-
-                    window.location.reload();
-                } else {
-
-                    notif.innerText = data.message;
-                }
-
-
-            } catch (error) {
-                notif.innerText = "error" + error.message;
-            }
-
+          const data = await respon.json();
+          if (data.status === 'success') {
+            localStorage.setItem('smlvl', data.data);
+            localStorage.setItem('token_sigma', data.token);
+            // console.log(data.message)
+            // console.log(data)
+            window.location.reload();
+          } else {
+            console.log(data.message)
+            notif.innerText = data.message;
+          }
+        } catch (error) {
+          notif.innerText = 'error' + error.message;
         }
+      };
     </script>
   </body>
 </html>

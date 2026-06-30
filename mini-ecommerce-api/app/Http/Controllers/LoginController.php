@@ -43,7 +43,7 @@ class LoginController extends Controller
                     'status' => 'success',
                     'message' => 'login berhasil',
                     'token' => $token,
-                    'role' => $role
+                    'data' => $role
                 ]);
 
             }
@@ -52,7 +52,7 @@ class LoginController extends Controller
                 'status' => 'success',
                 'message' => 'login berhasil',
                 'token' => $users->TOKEN,
-                'role' => $role
+                'data' => $role
             ]);
         }
         else{

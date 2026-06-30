@@ -3,10 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Auth\AuthManager;
 
 // import controller:D
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\API\ProfileController;
 
 use function PHPUnit\Framework\isInt;
 
@@ -27,8 +29,10 @@ Route::get('/produk', function (){
     ]);
 });
 
+// tes
 Route::get('/users',[UserController::class, 'index']);
 
+// bisa di akses semua orang:D
 Route::post('/login',[LoginController::class, 'login']);
 Route::post('/register',[LoginController::class,'register']);
 
@@ -54,12 +58,6 @@ Route::post('/logout', function(Request $request){
         }
         $users->TOKEN = null;
         $users->save();
-        // DB::table('users')->where('TOKEN',$tokenInput)->update([
-        //     "token" => null
-        // ]);
-
-        // $userDEBUG = \App\Models\User::where('USERNA',$tokenInput)->first();
-
 
         return response()->json([
             'status' => 'success',
@@ -132,17 +130,36 @@ Route::post('/verify-token', function (Request $request){
 
 });
 
-// admin
-Route::middleware(['role.sigma:ADMIN'])->group(function(){
+// Route::get('/products', [ProductController::class, 'index']);
+// Route::get('/products/{id}', [ProductController::class, 'show']);
 
-});
+    Route::get('/profile',[ProfileController::class, 'profile']);
 
-// penjual
-Route::middleware(['role.sigma:PENJUAL'])->group(function(){
 
-});
+// wajib login
+Route::middleware('auth:sanctum')->group(function (){
 
-// pembeli
-Route::middleware(['role.sigma:PEMBELI'])->group(function(){
+    // univ namun harus login
+    // Route::get('/profile',[ProfileController::class, 'profile']);
+
+
+    // admin
+    Route::middleware(['role.sigma:ADMIN'])->group(function(){
+
+    });
+    
+    // penjual
+    Route::middleware(['role.sigma:PENJUAL'])->group(function(){
+    
+    });
+    
+    // pembeli
+    Route::middleware(['role.sigma:PEMBELI'])->group(function(){
+        // Route::get('/cart', [CartController::class, 'index']);
+        // Route::post('/cart', [CartController::class, 'store']);
+
+        // Route::post('/checkout', [OrderController::class, 'checkout']);
+    });
+
 
 });

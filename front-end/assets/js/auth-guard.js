@@ -9,8 +9,6 @@
   let currentpages = window.location.pathname.split('/').pop();
   let currentdir = false; // hanya berfungsi jika ada dasboards pada dir atau url
 
-  console.log(current);
-
   if (current.includes('dashboards')) {
     const indexDashboard = current.indexOf('dashboards');
     currentdir = current[indexDashboard + 1];
