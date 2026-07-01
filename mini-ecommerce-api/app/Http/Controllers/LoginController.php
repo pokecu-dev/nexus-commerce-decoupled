@@ -30,7 +30,7 @@ class LoginController extends Controller
 
             if(!$users->TOKEN){
                 
-                $token = 'TOKEN_SIGMA_' . bin2hex(random_bytes(16));
+                $token = bin2hex(random_bytes(16));
 
                 DB::table('users')
                 ->where("ID",$users->ID)

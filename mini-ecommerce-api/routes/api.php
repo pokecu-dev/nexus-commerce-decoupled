@@ -38,7 +38,7 @@ Route::post('/register',[LoginController::class,'register']);
 
 // logout di be adalah hapus token
 Route::post('/logout', function(Request $request){
-    $tokenInput = $request->bearerToken('token');
+    $tokenInput = $request->bearerToken();
     
     if(!$tokenInput){
         return response()->json([
@@ -133,28 +133,28 @@ Route::post('/verify-token', function (Request $request){
 // Route::get('/products', [ProductController::class, 'index']);
 // Route::get('/products/{id}', [ProductController::class, 'show']);
 
-    Route::get('/profile',[ProfileController::class, 'profile']);
-
-
-// wajib login
-Route::middleware('auth:sanctum')->group(function (){
-
-    // univ namun harus login
     // Route::get('/profile',[ProfileController::class, 'profile']);
 
 
+// wajib login
+Route::middleware('auth.check')->group(function (){
+
+    // univ namun harus login
+    Route::get('/profile',[ProfileController::class, 'profile']);
+
+
     // admin
-    Route::middleware(['role.sigma:ADMIN'])->group(function(){
+    Route::middleware(['role.check:ADMIN'])->group(function(){
 
     });
     
     // penjual
-    Route::middleware(['role.sigma:PENJUAL'])->group(function(){
+    Route::middleware(['auth.check:PENJUAL'])->group(function(){
     
     });
     
     // pembeli
-    Route::middleware(['role.sigma:PEMBELI'])->group(function(){
+    Route::middleware(['auth.check:PEMBELI'])->group(function(){
         // Route::get('/cart', [CartController::class, 'index']);
         // Route::post('/cart', [CartController::class, 'store']);
 

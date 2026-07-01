@@ -14,7 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'role.sigma' => \App\Http\Middleware\CheckToken::class,
+            'auth.check' => \App\Http\Middleware\CheckToken::class,
+            // 'role.check' => \App\Http\Middleware\CheckRole::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

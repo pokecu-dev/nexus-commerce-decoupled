@@ -15,7 +15,7 @@ class CheckToken
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      * @param  string  $requiredRole (Ini parameter dinamis yang kita pasang di route)
      */
-    public function handle(Request $request, Closure $next, string $requiredRole = null): Response
+    public function handle(Request $request, Closure $next, string $requiredRole): Response
     {
 
         $token = $request->header('Authorization') ?? $request->input('token');
@@ -38,19 +38,16 @@ class CheckToken
             ]);
         }
 
-        if($requiredRole){
-            
-            if(strtoupper($users->ROLE) !== "ADMIN"){
-    
-                if (strtoupper($users->ROLE) !== strtoupper($requiredRole)) {
-                    return response()->json([
-                        'status' => 'error',
-                        'message' => 'anda tidak memiliki akses untuk mengakses API ini!'
-                    ], 403); 
-                }
+
+        if(strtoupper($users->ROLE) !== "ADMIN"){
+
+            if (strtoupper($users->ROLE) !== strtoupper($requiredRole)) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'anda tidak memiliki akses untuk mengakses API ini!'
+                ], 403); 
             }
         }
-
 
         return $next($request);
     }
